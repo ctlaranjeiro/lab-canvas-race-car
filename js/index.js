@@ -1,7 +1,8 @@
-const $canvas = document.querySelector("canvas");
-const game = new Game($canvas);
 
 window.onload = () => {
+  const $canvas = document.querySelector("canvas");
+  const game = new Game($canvas);
+  
   document.getElementById('start-button').onclick = () => {
     //startGame();
     game.start();

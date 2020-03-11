@@ -1,6 +1,9 @@
 class Player{
     constructor(game){
         this.context = game.context;
+
+        this.gameWidth = game.width;
+        this.gameHeigth = game.height;
         
         this.width = 158 / 3;
         this.height = 319 / 3;
@@ -11,8 +14,7 @@ class Player{
         this.image = new Image();
         this.image.src = "/images/car.png";
 
-        this.speedX = 0;
-        this.speedY = 0;
+        this.speed = 0;
     }
     
     drawPlayer(){
@@ -21,26 +23,61 @@ class Player{
     }
 
     update(){
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.x += this.speed;
     }
-
+    
     setControls(){
         window.addEventListener("keydown", event => {
             switch(event.keyCode){
                 case 39: //right key
-                    this.speedX = 2;
-                    break;
+                if (this.x < this.gameWidth - (this.width + 60)){  // 60 sets the road limits
+                    this.speed = 2;
+                    //console.log(this.x);
+                } else{
+                    this.speed = 0;
+                }
+                break;
                 case 37: //left key
-                    this.speedX = -2;
-                    break;
+                if (this.x > 60){   // 60 sets the road limits
+                    this.speed = -2;
+                    //console.log(this.x);
+                } else{
+                    this.speed = 0;
+                }
+                break;
             }
-            console.log(this.speedX, this.speedY);
+            //console.log(this.x);
         });
 
         window.addEventListener("keyup", event => {
-            this.speedX = 0;
-            this.speedY = 0;
+            this.speed = 0;
         });
+    }
+
+
+    //obstacle limits
+    left() {
+        return this.x;
+    }
+
+    right() {
+        return this.x + this.width;
+    }
+
+    top() {
+        return this.y;
+    }
+
+    bottom() {
+        return this.y + this.height;
+    }
+    
+    crashWith(obstacle) {
+        return !(
+          this.bottom() < obstacle.top() ||
+          this.top() > obstacle.bottom() ||
+          this.right() < obstacle.left() ||
+          this.left() > obstacle.right()
+        );
     }
 }
